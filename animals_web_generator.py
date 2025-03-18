@@ -16,16 +16,20 @@ def load_data(file_path):
         return json.load(handle)
 
 
-def make_animals_html(data):
+def make_animals_html(data, animal_name):
     """
     Generates an HTML list of animal information from the provided data.
 
     Args:
         data (list of dict): A list of dictionaries, each representing an animal with its attributes.
+        animal_name (str): The name of the animal that was searched.
 
     Returns:
         str: A string containing HTML markup for the animals.
     """
+    if not data:
+        return f'<h2> ): The animal "{animal_name}" does not exist in the API. :( </h2>'
+
     output = ""
 
     for animal in data:
@@ -81,12 +85,21 @@ def write_html_file(html_content):
         file.write(html_content)
 
 def get_animal_json(name):
+    """
+    Fetches animal data from the API based on provided name.
+
+    Args: name (str): The name of the animal to search for provided by usr input
+
+    Returns:
+        list or None: A list of animal data in JSON format if successful, otherwise None.
+    """
     api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(name)
     response = requests.get(api_url, headers={'X-Api-Key': 'e4kugb+adSUD+i3UPMNCKQ==hETJEYy9dgplQWPV'})
     if response.status_code == requests.codes.ok:
         return response.json()
     else:
         print("Error:", response.status_code, response.text)
+        return None
 
 
 def main():
@@ -108,7 +121,7 @@ def main():
     template = read_template('animals_template.html')
 
     # Generate the string of animal information
-    animals_string = make_animals_html(animals_data)
+    animals_string = make_animals_html(animals_data, name)
 
     # Replace the placeholder in the template
     output_html = template.replace('__REPLACE_ANIMALS_INFO__', animals_string)
