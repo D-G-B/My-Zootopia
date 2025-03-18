@@ -1,5 +1,5 @@
 import json
-import requests
+from data_fetcher import get_animal_json
 
 
 def load_data(file_path):
@@ -83,24 +83,6 @@ def write_html_file(html_content):
     """
     with open("animals.html", "w") as file:
         file.write(html_content)
-
-def get_animal_json(name):
-    """
-    Fetches animal data from the API based on provided name.
-
-    Args: name (str): The name of the animal to search for provided by usr input
-
-    Returns:
-        list or None: A list of animal data in JSON format if successful, otherwise None.
-    """
-    api_url = 'https://api.api-ninjas.com/v1/animals?name={}'.format(name)
-    response = requests.get(api_url, headers={'X-Api-Key': 'e4kugb+adSUD+i3UPMNCKQ==hETJEYy9dgplQWPV'})
-    if response.status_code == requests.codes.ok:
-        return response.json()
-    else:
-        print("Error:", response.status_code, response.text)
-        return None
-
 
 def main():
     """
